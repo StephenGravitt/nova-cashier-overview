@@ -4,6 +4,8 @@ namespace LimeDeck\NovaCashierOverview\Http\Controllers;
 
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Subscription;
+use App\Models\Billing\Subscription as SubscriptionModel;
+
 
 class DatabaseSubscriptionsController extends Controller
 {
@@ -13,18 +15,8 @@ class DatabaseSubscriptionsController extends Controller
      */
     public function show($billableId)
     {
-        $customerModel = Cashier::$customerModel;
-
-        /** @var \Illuminate\Database\Eloquent\Model $billableModel */
-        $billableModel = (new $customerModel());
-
-        /** @var \Laravel\Cashier\Billable|\Illuminate\Database\Eloquent\Model $billable */
-        $billable = $billableModel->find($billableId);
-
-        /** @var \Laravel\Cashier\Subscription $subscription */
-        $subscription = $billable->subscription(
-            $this->request->query('subscription', 'default')
-        );
+        
+        $subscription = SubscriptionModel::find($billableId);
 
         if (! $subscription) {
             return [
